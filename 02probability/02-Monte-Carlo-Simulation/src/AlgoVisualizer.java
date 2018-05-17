@@ -4,16 +4,12 @@
 import com.sun.scenario.effect.impl.prism.PrImage;
 
 import java.awt.*;
-import java.awt.event.KeyAdapter;
-import java.awt.event.MouseAdapter;
-import java.util.IllegalFormatException;
 import java.util.LinkedList;
 
 public class AlgoVisualizer {
 
     private static int DELAY = 40;
-    private Circle circle;
-    private LinkedList<Point> points;
+    private MonteCarloPiData data;
     private AlgoFrame frame;    // 视图
     private int N;
 
@@ -25,8 +21,8 @@ public class AlgoVisualizer {
 
         // 初始化数据
         this.N = N;
-        circle = new Circle(sceneWidth / 2,sceneHeight / 2,sceneHeight/2);
-        points = new LinkedList<Point>();
+        Circle circle = new Circle(sceneWidth / 2,sceneHeight / 2,sceneHeight/2);
+        data = new MonteCarloPiData(circle);
 
         // 初始化视图
         EventQueue.invokeLater(() -> {
@@ -41,13 +37,18 @@ public class AlgoVisualizer {
     private void run(){
 
         for (int i = 0;i<N;i++){
-            frame.render(circle,points);
-            AlgoVisHelper.pause(DELAY);
+
+            if (i % 100 == 0){
+                frame.render(data);
+                AlgoVisHelper.pause(DELAY);
+                System.out.println(data.estimatePi());
+            }
+
+
 
             int x = (int) (Math.random()*frame.getCanvasWidth());
             int y = (int) (Math.random()*frame.getCanvasHeight());
-            Point p = new Point(x,y);
-            points.add(p);
+            data.addPoint(new Point(x,y));
         }
     }
 
