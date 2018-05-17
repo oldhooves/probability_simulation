@@ -6,6 +6,9 @@ import java.util.Random;
 public class SelectSortData {
 
     private int[] numbers;
+    public int orderedIndex = -1;
+    public int currentMinIndex = -1;
+    public int currentCompareIndex = -1;
 
     public SelectSortData(int N,int randomBound){
 
