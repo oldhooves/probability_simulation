@@ -13,6 +13,13 @@ public class MazeData {
     private int N, M;
     private char[][] maze;
 
+    private int entranceX,entranceY;
+    private int exitX,exitY;
+
+    public boolean[][] visited;
+    public boolean[][] path;
+
+
     public MazeData(String filename){
 
         if(filename == null)
@@ -39,14 +46,20 @@ public class MazeData {
 
             // 读取后续的N行
             maze = new char[N][M];
+            visited = new boolean[N][M];
+            path = new boolean[N][M];
+
             for(int i = 0 ; i < N ; i ++){
                 String line = scanner.nextLine();
 
                 // 每行保证有M个字符
                 if(line.length() != M)
                     throw new IllegalArgumentException("Maze file " + filename + " is invalid");
-                for(int j = 0 ; j < M ; j ++)
+                for(int j = 0 ; j < M ; j ++){
                     maze[i][j] = line.charAt(j);
+                    visited[i][j] = false;
+                    path[i][j] = false;
+                }
             }
         }
         catch(IOException e){
@@ -56,10 +69,32 @@ public class MazeData {
             if(scanner != null)
                 scanner.close();
         }
+
+        entranceX = 1;
+        entranceY = 0;
+        exitX = N-2;
+        exitY = M-1;
     }
 
     public int N(){ return N; }
     public int M(){ return M; }
+
+    public int getEntranceX() {
+        return entranceX;
+    }
+
+    public int getEntranceY() {
+        return entranceY;
+    }
+
+    public int getExitX() {
+        return exitX;
+    }
+
+    public int getExitY() {
+        return exitY;
+    }
+
     public char getMaze(int i, int j){
         if(!inArea(i,j))
             throw new IllegalArgumentException("i or j is out of index in getMaze!");
