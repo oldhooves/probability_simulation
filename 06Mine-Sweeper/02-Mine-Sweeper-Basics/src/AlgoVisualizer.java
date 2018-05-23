@@ -37,7 +37,7 @@ public class AlgoVisualizer {
 
         int N = 20;
         int M = 20;
-        int mineNumber = 1;
+        int mineNumber = 50;
 
         AlgoVisualizer vis = new AlgoVisualizer(N, M, mineNumber);
 
