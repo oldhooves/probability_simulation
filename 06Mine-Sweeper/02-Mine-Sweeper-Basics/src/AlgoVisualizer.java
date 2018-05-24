@@ -1,4 +1,6 @@
 import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
 
 public class AlgoVisualizer {
 
@@ -16,21 +18,67 @@ public class AlgoVisualizer {
 
         EventQueue.invokeLater(() -> {
             frame = new AlgoFrame("Mine Sweeper", sceneWidth,sceneHeight);
-
+            frame.addMouseListener(new AlgoMouseListener());
             new Thread(() -> {
                 run();
             }).start();
         });
     }
 
-    private void run(){
+    public void run(){
 
-        setData();
+        this.setData(false, -1, -1);
+
     }
 
-    private void setData(){
+    private void setData(boolean isLeftClicked, int x, int y){
+        if(data.inArea(x, y)){
+            if(isLeftClicked){
+                if (data.isMine(x, y)){
+                    //game over
+                    data.open[x][y] = true;
+                }
+                else {
+                    data.open(x,y);
+                }
+            }
+            else
+                data.flags[x][y] = !data.flags[x][y];
+        }
+
         frame.render(data);
         AlgoVisHelper.pause(DELAY);
+    }
+
+    public void addAlgoMouseListener(){
+        frame.addMouseListener(new AlgoMouseListener());
+    }
+
+    private class AlgoMouseListener extends MouseAdapter{
+
+        @Override
+        public void mouseReleased(MouseEvent event){
+
+            event.translatePoint(
+                    -(int)(frame.getBounds().width - frame.getCanvasWidth()),
+                    -(int)(frame.getBounds().height - frame.getCanvasHeight())
+            );
+
+            Point pos = event.getPoint();
+
+            int w = frame.getCanvasWidth() / data.M();
+            int h = frame.getCanvasHeight() / data.N();
+
+            int x = pos.y / h;
+            int y = pos.x / w;
+            // System.out.println(x + " , " + y);
+
+            if(SwingUtilities.isLeftMouseButton(event))
+                setData(true, x, y);
+            else if(SwingUtilities.isRightMouseButton(event))
+                setData(false, x, y);
+
+        }
     }
 
     public static void main(String[] args) {
@@ -40,6 +88,5 @@ public class AlgoVisualizer {
         int mineNumber = 50;
 
         AlgoVisualizer vis = new AlgoVisualizer(N, M, mineNumber);
-
     }
 }
