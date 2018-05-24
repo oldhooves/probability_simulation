@@ -50,9 +50,7 @@ public class AlgoVisualizer {
         AlgoVisHelper.pause(DELAY);
     }
 
-    public void addAlgoMouseListener(){
-        frame.addMouseListener(new AlgoMouseListener());
-    }
+
 
     private class AlgoMouseListener extends MouseAdapter{
 
